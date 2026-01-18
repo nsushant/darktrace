@@ -24,7 +24,7 @@ import sys
 import pandas as pd
 from darktrace.tagging.spatial_tagging import *
 from darktrace.tagging.utils import *
-from config import config
+from ..config import config
 
 
 def help():

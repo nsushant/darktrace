@@ -25,7 +25,7 @@ from numpy import sqrt
 import random
 import pynbody
 from .utils import *
-from config import config
+from ..config import config
 
 
 '''

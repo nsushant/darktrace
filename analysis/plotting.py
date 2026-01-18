@@ -15,7 +15,7 @@ import seaborn as sns
 from darktrace.tagging.utils import *
 from darktrace.analysis.calculate import *
 import edge_tangos_properties as etp
-from config import config 
+from ..config import config 
 
 #mpl.rcParams.update({'text.usetex': False})
 

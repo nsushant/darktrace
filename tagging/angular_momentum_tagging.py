@@ -23,7 +23,7 @@ from darktrace.tagging.utils import *
 
 from tangos.examples.mergers import * 
 
-from config import config 
+from ..config import config 
 
 from numpy import sqrt
 import random

@@ -20,29 +20,56 @@ A Python package for assigning stellar mass to dark matter particles in dark mat
 
 ## Installation
 
-### Prerequisites
+### Development Installation (Recommended)
 
-Make sure you have the following dependencies installed:
+This package is designed for development installation. Follow these steps:
 
 ```bash
-pip install numpy pandas matplotlib seaborn pynbody
-```
-
-**Note**: `tangos` and `darklight` are specialized astrophysics packages that may need to be installed from source or specific repositories.
-
-### Install Darktrace
-
-Since this package is not available on PyPI, install it directly from the repository:
-
-1. Clone the repository:
-```bash
-git clone https://github.com/nsushantnigudkar/darktrace.git
+# Clone the repository
+git clone https://github.com/nsushant/nigudkar/darktrace.git
 cd darktrace
+
+# Install in development mode
+pip install -e .
 ```
+
+### With Astrophysics Dependencies
+
+For full functionality with specialized astrophysics packages:
+
+```bash
+pip install -e .[astrophysics]
+```
+
+### Verify Installation
+
+```bash
+python verify_install.py
+```
+
+Or for a quick test:
+```bash
+python -c "import darktrace; from darktrace.config import config; print('✓ Darktrace installed successfully!')"
+```
+
+### Dependencies
+
+#### Core Dependencies (auto-installed)
+- **numpy** >= 1.20.0: Numerical computations
+- **pandas** >= 1.3.0: Data manipulation
+- **matplotlib** >= 3.5.0: Basic plotting
+- **seaborn** >= 0.11.0: Statistical visualization
+
+#### Astrophysics Dependencies (optional extras)
+- **pynbody**: Astrophysical simulation analysis
+- **tangos**: Simulation database management
+- **darklight**: Halo analysis tools
+
+**Note**: If specialized astrophysics packages are not available via pip, install them manually from their respective repositories before running `pip install -e .[astrophysics]`.
 
 ## Configuration
 
-Before using the package, you need to configure the paths in `config/config.json`:
+The package includes a centralized configuration system. Update paths in `config/config.json`:
 
 ```json
 {
@@ -64,6 +91,23 @@ Before using the package, you need to configure the paths in `config/config.json
 }
 ```
 
+### Accessing Configuration
+
+```python
+from darktrace.config import config
+
+# Get specific paths
+tangos_path = config.get_path('tangos_path')
+pynbody_path = config.get_path('pynbody_path')
+
+# Get configuration values
+ftag = config.get('tagging', 'ftag')
+method = config.get('tagging', 'method')
+
+# Get all paths
+all_paths = config.get_all_paths()
+```
+
 Update the paths to point to your simulation data and tangos databases.
 
 ## Usage
@@ -73,7 +117,7 @@ Update the paths to point to your simulation data and tangos databases.
 ```python
 import tangos
 import darktrace as dtrace
-from config import config
+from darktrace.config import config
 
 # Initialize tangos database
 tangos.core.init_db('your_simulation.db')
@@ -124,21 +168,12 @@ cd examples
 python tutorial_1_getting_started.py
 ```
 
-## Dependencies
+## Data Requirements
 
-### Core Dependencies
-- **numpy**: Numerical computations
-- **pandas**: Data manipulation
-- **pynbody**: Astrophysical simulation analysis
-- **tangos**: Simulation database management
-- **darklight**: Halo analysis tools
-
-### Optional Dependencies (for plotting)
-- **matplotlib**: Basic plotting
-- **seaborn**: Statistical visualization
-
-### Standard Library
-- `os`, `csv`, `random` (included with Python)
+The tagging methods require:
+- **Tangos databases** with merger trees
+- **Pynbody particle data** 
+- **AHF or HOP halo catalogues**
 
 ## Data Requirements
 

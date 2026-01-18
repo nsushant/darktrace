@@ -9,11 +9,8 @@ instead of hardcoded paths for particle tagging functions.
 import os
 import sys
 import tangos
-
-# Add the darktrace directory to the path
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
-from config import config
+import darktrace as dtrace
+from darktrace.config import config
 from darktrace.tagging.angular_momentum_tagging import angmom_tag_over_full_sim
 from darktrace.tagging.tagging_wrapper_func import tag_particles
 
@@ -142,7 +139,7 @@ if __name__ == "__main__":
         print("=== Demo completed successfully! ===")
         print()
         print("To use in your own scripts:")
-        print("1. Import: from config import config")
+        print("1. Import: from darktrace.config import config")
         print("2. Use paths: config.get_path('pynbody_path')")
         print("3. Modify config.json for your environment")
     else:

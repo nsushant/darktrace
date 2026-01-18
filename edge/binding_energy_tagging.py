@@ -28,7 +28,7 @@ import pandas as pd
 import darktrace.tagging.binding_energy_tagging as dtrace
 from darktrace.tagging.utils import *
 from darktrace.analysis.calculate import * 
-from config import config
+from ..config import config
 
 
 def get_child_iords(halo,halo_catalog,DMOstate='fiducial'):

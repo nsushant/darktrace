@@ -1,4 +1,4 @@
-from config import config
+from darktrace.config import config
 
 def print_all_paths():
     print("Available paths in config:\n")
