@@ -5,7 +5,7 @@ import tangos
 
 import darktrace as dtrace 
 import matplotlib.pyplot as plt 
-from darktrace.config import config 
+from config import config 
 
 # specify preference of halo catalog
 

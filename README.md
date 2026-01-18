@@ -20,56 +20,46 @@ A Python package for assigning stellar mass to dark matter particles in dark mat
 
 ## Installation
 
-### Development Installation (Recommended)
+### Simple Installation (No Setup Files Required)
 
-This package is designed for development installation. Follow these steps:
+This package uses a simple configuration that requires no complex setup. Follow these steps:
 
 ```bash
 # Clone the repository
 git clone https://github.com/nsushant/nigudkar/darktrace.git
 cd darktrace
 
-# Install in development mode
-pip install -e .
-```
+# No setup needed - just ensure dependencies are installed
+pip install numpy pandas matplotlib seaborn
 
-### With Astrophysics Dependencies
-
-For full functionality with specialized astrophysics packages:
-
-```bash
-pip install -e .[astrophysics]
+# Optional: Install astrophysics dependencies
+pip install pynbody tangos darklight
 ```
 
 ### Verify Installation
 
 ```bash
-python verify_install.py
-```
-
-Or for a quick test:
-```bash
-python -c "import darktrace; from darktrace.config import config; print('✓ Darktrace installed successfully!')"
+python -c "import config; print('✓ Configuration system works!')"
 ```
 
 ### Dependencies
 
-#### Core Dependencies (auto-installed)
+#### Core Dependencies
 - **numpy** >= 1.20.0: Numerical computations
-- **pandas** >= 1.3.0: Data manipulation
+- **pandas** >= 1.3.0: Data manipulation  
 - **matplotlib** >= 3.5.0: Basic plotting
 - **seaborn** >= 0.11.0: Statistical visualization
 
-#### Astrophysics Dependencies (optional extras)
+#### Astrophysics Dependencies (optional)
 - **pynbody**: Astrophysical simulation analysis
 - **tangos**: Simulation database management
 - **darklight**: Halo analysis tools
 
-**Note**: If specialized astrophysics packages are not available via pip, install them manually from their respective repositories before running `pip install -e .[astrophysics]`.
+**Note**: Install astrophysics packages manually if not available via pip, from their respective repositories.
 
 ## Configuration
 
-The package includes a centralized configuration system. Update paths in `config/config.json`:
+The package uses a simple JSON configuration system. Update paths in `config.json`:
 
 ```json
 {
@@ -94,7 +84,7 @@ The package includes a centralized configuration system. Update paths in `config
 ### Accessing Configuration
 
 ```python
-from darktrace.config import config
+from config import config
 
 # Get specific paths
 tangos_path = config.get_path('tangos_path')
@@ -117,7 +107,7 @@ Update the paths to point to your simulation data and tangos databases.
 ```python
 import tangos
 import darktrace as dtrace
-from darktrace.config import config
+import config
 
 # Initialize tangos database
 tangos.core.init_db('your_simulation.db')
@@ -128,7 +118,7 @@ DMO_database = tangos.get_simulation('your_simulation_name')
 # Perform particle tagging
 df_tagged_particles = dtrace.tag_particles(
     DMO_database, 
-    path_to_particle_data=config.get_path("pynbody_path"),
+    path_to_particle_data=config.config.get_path("pynbody_path"),
     tagging_method='angular momentum',
     free_param_val=0.001
 )
@@ -137,7 +127,7 @@ df_tagged_particles = dtrace.tag_particles(
 df_half_mass_tagged = dtrace.calculate_rhalf(
     DMO_database, 
     df_tagged_particles,
-    pynbody_path=config.get_path("pynbody_path")
+    pynbody_path=config.config.get_path("pynbody_path")
 )
 ```
 

@@ -10,7 +10,7 @@ import os
 import sys
 import tangos
 import darktrace as dtrace
-from darktrace.config import config
+import config
 from darktrace.tagging.angular_momentum_tagging import angmom_tag_over_full_sim
 from darktrace.tagging.tagging_wrapper_func import tag_particles
 
@@ -22,9 +22,9 @@ def main():
     
     # Show current configuration
     print("Current configuration paths:")
-    print(f"  Tangos path: {config.get_path('tangos_path')}")
-    print(f"  Pynbody path: {config.get_path('pynbody_path')}")
-    print(f"  Manual halo num path: {config.get_path('manual_halonum_path')}")
+    print(f"  Tangos path: {config.config.get_path('tangos_path')}")
+    print(f"  Pynbody path: {config.config.get_path('pynbody_path')}")
+    print(f"  Manual halo num path: {config.config.get_path('manual_halonum_path')}")
     print()
     
     # Example simulation name (modify as needed)
@@ -139,8 +139,8 @@ if __name__ == "__main__":
         print("=== Demo completed successfully! ===")
         print()
         print("To use in your own scripts:")
-        print("1. Import: from darktrace.config import config")
-        print("2. Use paths: config.get_path('pynbody_path')")
+        print("1. Import: from config import config")
+        print("2. Use paths: config.config.get_path('pynbody_path')")
         print("3. Modify config.json for your environment")
     else:
         print("Demo failed!")

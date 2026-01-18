@@ -4,7 +4,7 @@ import os
 class Config:
     def __init__(self, config_file=None):
         if config_file is None:
-            # Get path relative to this file
+            # Get path relative to this file (now root directory)
             current_dir = os.path.dirname(os.path.abspath(__file__))
             config_file = os.path.join(current_dir, "config.json")
         
