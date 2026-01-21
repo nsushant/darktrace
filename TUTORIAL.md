@@ -14,8 +14,8 @@ All paths are now centralized in `config/config.json`:
 ```json
 {
     "paths": {
-        "tangos_path": "/scratch/dp324/shared/dp101/EDGE/tangos/",
-        "pynbody_path": "/scratch/dp324/shared/dp101/EDGE/",
+        "tangos_path": "/path/to/your/tangos/databases/",
+        "pynbody_path": "/path/to/your/pynbody/data/",
         "manual_halonum_path": "",
         "manual_mstar_path": ""
     },
@@ -54,9 +54,11 @@ The configuration class provides methods to access paths:
 ```python
 from darktrace.tagging.angular_momentum_tagging import angmom_tag_over_full_sim
 import tangos
+import os
+from config import config
 
 # Load simulation
-tangos.init_db(join(config.get_path("tangos_path"), "Halo1459.db"))
+tangos.init_db(os.path.join(config.get_path("tangos_path"), "Halo1459.db"))
 DMOsim = tangos.get_simulation("Halo1459_DMO")
 
 # Run tagging (uses config path automatically)
@@ -89,6 +91,7 @@ df_tagged = angmom_tag_over_full_sim(DMOsim, halonumber=1, free_param_value=0.01
 **Example usage:**
 ```python
 from darktrace.tagging.binding_energy_tagging import BE_tag_over_full_sim
+from config import config
 
 # Run binding energy tagging
 df_tagged = BE_tag_over_full_sim(DMOsim, halonumber=1, free_param_value=0.01)
@@ -121,6 +124,14 @@ from darktrace.tagging.tagging_wrapper_func import tag_particles
 
 # Uses config path automatically
 df_tagged = tag_particles(DMO_database, tagging_method='angular momentum', free_param_val=0.01)
+
+# For recursive tagging with mergers
+df_tagged_recursive = tag_particles(
+    DMO_database, 
+    tagging_method='angular momentum recursive',
+    free_param_val=0.01,
+    include_mergers=True
+)
 ```
 
 #### `calculate_reffs_over_full_sim(DMOsim, particles_tagged, pynbody_path=None, ...)`
@@ -134,12 +145,12 @@ df_tagged = tag_particles(DMO_database, tagging_method='angular momentum', free_
 ## Configuration for Different Environments
 
 ### Local Development
-Update `config/config.json` with your local paths:
+Update `config.json` with your local paths:
 ```json
 {
     "paths": {
-        "tangos_path": "/path/to/your/tangos/databases/",
-        "pynbody_path": "/path/to/your/particle/data/"
+        "tangos_path": "/Users/username/data/tangos/",
+        "pynbody_path": "/Users/username/data/simulations/"
     }
 }
 ```
@@ -151,6 +162,17 @@ Set paths appropriate for your system:
     "paths": {
         "tangos_path": "/scratch/username/shared/simulations/tangos/",
         "pynbody_path": "/scratch/username/shared/simulations/"
+    }
+}
+```
+
+### Shared Network Storage
+For network-mounted storage:
+```json
+{
+    "paths": {
+        "tangos_path": "/network/storage/simulations/tangos/",
+        "pynbody_path": "/network/storage/simulations/"
     }
 }
 ```
@@ -186,16 +208,18 @@ The updated functions include proper error handling:
 
 ### From Old (Hardcoded Paths)
 ```python
-# Old way
-tangos.core.init_db("/scratch/dp101/shared/EDGE/tangos/Halo1459.db")
-simfn = join("/scratch/dp101/shared/EDGE/", "output_00000")
+# Old way - avoid this
+tangos.core.init_db("/hardcoded/path/to/tangos/Halo1459.db")
+simfn = "/hardcoded/path/to/simulation/output_00000"
 ```
 
 ### To New (Config System)
 ```python
-# New way
-tangos.core.init_db(join(config.get_path("tangos_path"), "Halo1459.db"))
-simfn = join(config.get_path("pynbody_path"), "output_00000")
+# New way - recommended
+import os
+from config import config
+tangos.core.init_db(os.path.join(config.get_path("tangos_path"), "Halo1459.db"))
+simfn = os.path.join(config.get_path("pynbody_path"), "output_00000")
 ```
 
 ## Troubleshooting
@@ -212,6 +236,80 @@ Add debug prints to verify path resolution:
 ```python
 print(f"Using tangos path: {config.get_path('tangos_path')}")
 print(f"Using pynbody path: {config.get_path('pynbody_path')}")
+```
+
+## Error Handling Examples
+
+### 1. Path Verification
+```python
+import os
+from config import config
+
+def verify_paths():
+    """Verify that all required paths exist and are accessible."""
+    tangos_path = config.get_path('tangos_path')
+    pynbody_path = config.get_path('pynbody_path')
+    
+    if not os.path.exists(tangos_path):
+        raise FileNotFoundError(f"Tangos path not found: {tangos_path}")
+    
+    if not os.path.exists(pynbody_path):
+        raise FileNotFoundError(f"Pynbody path not found: {pynbody_path}")
+    
+    print("✓ All paths verified successfully")
+
+# Usage
+verify_paths()
+```
+
+### 2. Safe Database Loading
+```python
+import tangos
+from config import config
+
+def load_simulation_safe(sim_name, db_name):
+    """Safely load a simulation with error handling."""
+    try:
+        db_path = os.path.join(config.get_path('tangos_path'), db_name)
+        tangos.init_db(db_path)
+        return tangos.get_simulation(sim_name)
+    except Exception as e:
+        print(f"Failed to load simulation {sim_name}: {e}")
+        return None
+
+# Usage
+DMO_database = load_simulation_safe('Halo1459_DMO', 'Halo1459.db')
+if DMO_database is None:
+    print("Skipping tagging due to database loading failure")
+```
+
+### 3. Robust Tagging
+```python
+from darktrace.tagging.tagging_wrapper_func import tag_particles
+
+def safe_tag_particles(DMO_database, **kwargs):
+    """Perform particle tagging with comprehensive error handling."""
+    if DMO_database is None:
+        raise ValueError("Database is None - cannot proceed with tagging")
+    
+    try:
+        df_tagged = tag_particles(DMO_database, **kwargs)
+        if df_tagged is None or df_tagged.empty:
+            raise ValueError("Tagging returned empty results")
+        return df_tagged
+    except MemoryError:
+        print("Memory error during tagging - try reducing simulation size or using more RAM")
+        return None
+    except Exception as e:
+        print(f"Tagging failed: {e}")
+        return None
+
+# Usage
+df_tagged = safe_tag_particles(
+    DMO_database,
+    tagging_method='angular momentum',
+    free_param_val=0.01
+)
 ```
 
 ## Advanced Usage
