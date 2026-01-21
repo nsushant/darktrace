@@ -14,8 +14,8 @@ class Config:
     def get_path(self, key):
         return self._config['paths'][key]
     
-    def get(self, key, default=None):
-        return self._config.get(key, default)
+    def get(self, key, param):
+        return self._config[key][param]
     def get_all_paths(self):
         return self._config.get('paths', {})
 

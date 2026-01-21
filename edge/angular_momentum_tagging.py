@@ -150,8 +150,16 @@ def angmom_tag_particles_edge(sim_name,halo_number=1,mergers = True, machine='di
         
     print('HALONUMS:---',len(halonums), "OUTPUTS---",len(outputs))
 
+    if (config.get_path("manual_halonum_path")==""):
+
+        hnumpath = None 
+
+    else:
+        
+        hnumpath = config.get_path("manual_halonum_path")
+
     if recursive==True:
-        df_tagged_particles,l_sel = dtrace.angmom_tag_over_full_sim_recursive(DMOsim,-1, halo_number, free_param_value = config.get("tagging","ftag"), pynbody_path  = os.path.join(config.get_path('pynbody_path'),str(sim_name)),AHF_centers_filepath=config.get_path("manual_halonum_path"))
+        df_tagged_particles,l_sel = dtrace.angmom_tag_over_full_sim_recursive(DMOsim,-1, halo_number, free_param_value = config.get("tagging","ftag"), pynbody_path  = os.path.join(config.get_path('pynbody_path'),str(sim_name)),AHF_centers_filepath=hnumpath)
         
     else:
         df_tagged_particles = dtrace.angmom_tag_over_full_sim(DMOsim, halonumber=halo_number, free_param_value = config.get("tagging","ftag"), particle_storage_filename=None, mergers=mergers)
@@ -178,8 +186,13 @@ def center_on_tagged(radial_dists,mass):
 
 
 def angmom_calculate_reffs(sim_name, particles_tagged,reffs_fname,from_file = False,from_dataframe=False,save_to_file=True,machine='dirac',physics='edge1'):
+
      
-    path_AHF_halonums = join(config.get_path("manual_halonum_path"),"DMO",sim_name)  
+    if (config.get_path("manual_halonum_path") == ""):
+
+        path_AHF_halonums= None 
+    else:
+        path_AHF_halonums = join(config.get_path("manual_halonum_path"),"DMO",sim_name)  
     
     AHF_halonums = None
 

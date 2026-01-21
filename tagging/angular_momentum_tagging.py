@@ -531,7 +531,9 @@ def angmom_tag_over_full_sim_recursive(DMOsim,tstep, halonumber, free_param_valu
 
     t_all,red_all,main_halo,halonums,outputs = load_indexing_data(DMOsim,halonumber)
     
-    t,redshift,vsmooth,sfh_insitu,mstar_s_insitu,mstar_total = DarkLight(main_halo,DMO=True,n=config.get("darklight","n"),mergers=False)
+    print(config.get("darklight","n"))
+
+    t,redshift,vsmooth,sfh_insitu,mstar_s_insitu,mstar_total = DarkLight(main_halo,DMO=True,n=config.get("darklight","n"),mergers=False) 
     
     mstar_s_insitu = np.asarray(mstar_s_insitu[0])
     print("t,z:",t,redshift)
