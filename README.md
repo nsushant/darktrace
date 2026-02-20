@@ -6,10 +6,6 @@
 
 A Python package for assigning stellar mass to dark matter particles in dark matter-only simulations. The primary goal is to accurately reproduce the sizes and stellar mass distributions of dwarf galaxies using advanced particle tagging methods.
 
-<img width="1183" alt="image" src="https://github.com/nsushant/particle_tagging_package/assets/64201587/9cd0684d-7a8f-4015-b329-4456a1f3c27b">
-
-*Figure 1. White circle shows the calculated halflight radius. Blue circle shows the virial radius of the dark matter halo and contours show the stellar mass distribution created by particle tagging.*
-
 ## Features
 
 - **Angular Momentum Tagging**: Associates stellar mass with dark matter particles using their angular momenta
@@ -20,25 +16,47 @@ A Python package for assigning stellar mass to dark matter particles in dark mat
 
 ## Installation
 
-### PyPI Installation (Recommended)
+### Full Installation (Recommended for Astrophysics Work)
+
+**Required for stellar mass growth histories:**
 
 ```bash
-# Basic installation
+# Install core package
 pip install darktag
 
-# Or with astrophysics dependencies
-pip install darktag[astrophysics]
+# Install darklight from Git (latest development version)
+pip install darklight @ git+https://github.com/stacykim/darklight.git@main#egg=darklight
 ```
 
-### Manual Astrophysics Dependencies (if needed)
-
-If the optional dependencies fail to install, you can install them manually:
+### Basic Installation (Core Functionality Only)
 
 ```bash
-pip install pynbody @ git+https://github.com/pynbody/pynbody.git
-pip install tangos @ git+https://github.com/pynbody/tangos.git
-pip install darklight @ git+https://github.com/stacykim/darklight.git
+# Core functionality without darklight
+pip install darktag
 ```
+
+**Important:** The darklight package on PyPI is a different package and not compatible with this workflow. Always install darklight from Git for the correct stellar mass growth history functionality.
+
+### Manual Installation (Troubleshooting)
+
+If automatic installation fails, install dependencies manually:
+
+```bash
+# Install core astrophysics packages from PyPI
+pip install pynbody tangos
+
+# Install darklight manually from Git (if needed)
+pip install darklight @ git+https://github.com/stacykim/darklight.git@main#egg=darklight
+```
+
+### Why Install darklight from Git?
+
+**Git-based installation is required because:**
+- **Latest features**: Access to the most recent updates and bug fixes
+- **Active development**: Darklight is under active development with frequent improvements
+- **Better compatibility**: Ensures compatibility with recent simulation formats
+- **Different package**: The darklight package on PyPI is a completely different package, not the astrophysics library
+- **Correct functionality**: Only the Git version provides the stellar mass growth history algorithms needed for particle tagging
 
 ### Verify Installation
 
@@ -57,13 +75,13 @@ For manual installation or troubleshooting, see [INSTALL.md](INSTALL.md) for det
 - **pandas** >= 1.3.0: Data manipulation  
 - **matplotlib** >= 3.5.0: Basic plotting
 - **seaborn** >= 0.11.0: Statistical visualization
+- **scipy** >= 1.7.0: Scientific computing
+- **scikit-learn** >= 0.24.0: Machine learning utilities
 
-#### Astrophysics Dependencies (optional)
-- **pynbody**: Astrophysical simulation analysis
-- **tangos**: Simulation database management
-- **darklight**: Generates stellar mass growth histories
-
-**Note**: Install astrophysics packages manually if not available via pip, from their respective repositories.
+#### Astrophysics Dependencies 
+- **pynbody** >= 2.1: Astrophysical simulation analysis (installed automatically)
+- **tangos** >= 1.10.0: Simulation database management (installed automatically)
+- **darklight**: Generates stellar mass growth histories (install with `[darklight]` extra)
 
 ## Quick Start
 
@@ -274,7 +292,7 @@ If you use this package in your research, please cite:
 ```bibtex
 @software{darktag,
   title={Darktag: Particle Tagging for Dark Matter Simulations},
-  author={Nigudkar, Sushant},
+  author={Nigudkar, Sushanta},
   year={2024},
   url={https://github.com/nsushantnigudkar/darktag}
 }

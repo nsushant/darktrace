@@ -4,13 +4,14 @@ build-backend = "hatchling.build"
 
 [project]
 name = "darktag"
-version = "1.0.0"
+version = "1.0.2"
 description = "Particle tagging for dark matter simulations"
 readme = "README.md"
 
 authors = [
     {name = "Sushanta Nigudkar"}
 ]
+license = {text = "MIT"}
 classifiers = [
     "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Science/Research",
@@ -29,10 +30,11 @@ dependencies = [
     "seaborn>=0.11.0",
     "scipy>=1.7.0",
     "scikit-learn>=0.24.0",
-    "pynbody @ git+https://github.com/pynbody/pynbody.git@main#egg=pynbody",
-    "tangos @ git+https://github.com/pynbody/tangos.git@main#egg=tangos",
-    "darklight @ git+https://github.com/stacykim/darklight.git@main#egg=darklight"
+    "pynbody>=2.1",
+    "tangos>=1.10.0"
 ]
+
+
 keywords = ["astronomy", "astrophysics", "particle-tagging", "dark-matter", "simulations", "stellar-mass"]
 
 [project.urls]
@@ -41,11 +43,10 @@ Repository = "https://github.com/nsushantnigudkar/darktag"
 Issues = "https://github.com/nsushantnigudkar/darktag/issues"
 
 [tool.hatch.build.targets.sdist]
-include = ["LICENSE", "README.md", "darktag/**/*"]
+include = ["LICENSE", "README.md", "darktag/**/*", "config.py", "config.json"]
 
 [tool.hatch.build.targets.wheel]
-include = ["darktag/**/*"]
+include = ["darktag/**/*", "config.py", "config.json"]
 
-[tool.hatch.metadata]
-allow-direct-references = true
+
 
